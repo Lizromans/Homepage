@@ -2,7 +2,7 @@ import os
 import json
 import logging
 
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.conf import settings
 from django.http import JsonResponse
@@ -271,9 +271,15 @@ def agregar_solucion(request):
             
             # Lista de iconos válidos
             iconos_validos = [
-                'rocket', 'lightbulb', 'flask', 'graduation-cap',
-                'chart-line', 'users', 'book-open', 'microscope',
-                'brain', 'atom', 'dna', 'laptop-code'
+                'Chat', 'Teléfono', 'Correo', 'Notificación', 'Anuncio',
+                'Ubicación', 'Mapa', 'Casa', 'Edificio',
+                'Reloj', 'Calendario', 'Alarma',
+                'Engranaje', 'Herramienta', 'Bombilla',
+                'Código', 'Terminal', 'Base de datos',
+                'Gráfica', 'Dinero', 'Maletín',
+                'Documento', 'Carpeta', 'Nube', 'Descargar',
+                'Libro', 'Diploma', 'Graduación', 'Lápiz',
+                'Estrella', 'Corazón', 'Usuario', 'Buscar', 'Candado'
             ]
             
             if icono_nombre not in iconos_validos:
@@ -318,149 +324,65 @@ def agregar_solucion(request):
         }, status=500)
 
 
-@csrf_exempt
-@require_http_methods(["POST", "PUT"])
-def editar_solucion(request, solucion_id):
-    """Vista para editar una solución existente"""
-    try:
-        # Validar autenticación
-        admin_id = request.session.get('catalogo_admin_id')
-        if not admin_id:
-            return JsonResponse({
-                'success': False,
-                'error': 'No estás autenticado como administrador'
-            }, status=403)
-        
-        # Obtener la solución
-        try:
-            solucion = Solucion.objects.get(id=solucion_id)
-        except Solucion.DoesNotExist:
-            return JsonResponse({
-                'success': False,
-                'error': 'Solución no encontrada'
-            }, status=404)
-        
-        # Verificar permisos
-        if solucion.id_admin.id_admin != admin_id:
-            return JsonResponse({
-                'success': False,
-                'error': 'No tienes permisos para editar esta solución'
-            }, status=403)
-        
-        # Actualizar campos si se proporcionan
-        if 'titulo' in request.POST:
-            titulo = request.POST.get('titulo', '').strip()
-            if titulo:
-                solucion.titulo = titulo
-        
-        if 'descripcion' in request.POST:
-            descripcion = request.POST.get('descripcion', '').strip()
-            if descripcion:
-                solucion.descripcion = descripcion
-        
-        if 'categoria' in request.POST:
-            categoria = request.POST.get('categoria', '').strip()
-            if categoria in ['innovacion', 'investigacion', 'academico']:
-                solucion.categoria = categoria
-        
-        if 'url' in request.POST:
-            url = request.POST.get('url', '').strip()
-            if url and url.startswith(('http://', 'https://')):
-                solucion.url = url
-        
-        # ✅ CORREGIDO: Actualizar icono/imagen correctamente
-        tipo_imagen = request.POST.get('tipo_imagen')
-        if tipo_imagen == 'image' and 'icono' in request.FILES:
-            imagen = request.FILES['icono']
-            if imagen.name.lower().endswith('.png') and imagen.size <= 2 * 1024 * 1024:
-                solucion.icono_imagen = imagen  # ✅ Campo correcto
-                solucion.tipo_icono = 'imagen'
-        elif tipo_imagen == 'icon':
-            icono_nombre = request.POST.get('icono_nombre', '').strip()
-            if icono_nombre:
-                solucion.icono_nombre = icono_nombre  # ✅ Campo correcto
-                solucion.tipo_icono = 'svg'
-        
+def editar_solucion(request, id):
+    solucion = get_object_or_404(Solucion, id=id)
+
+    if request.method == "POST":
+        solucion.titulo = request.POST.get("titulo")
+        solucion.descripcion = request.POST.get("descripcion")
+        solucion.categoria = request.POST.get("categoria")
+        solucion.url = request.POST.get("url")
+
+        tipo = request.POST.get("editImageType")  # icon o image
+
+        # ===== USAR ICONO SVG =====
+        if tipo == "icon":
+            icono_nombre = request.POST.get("icono_nombre", "").strip()
+
+            if not icono_nombre:
+                messages.error(request, "Debes seleccionar un icono.")
+                return redirect("bienvenido")
+
+            solucion.icono_nombre = icono_nombre
+            solucion.tipo_icono = "svg"
+
+            # eliminar imagen anterior si existía
+            if solucion.icono_imagen and os.path.isfile(solucion.icono_imagen.path):
+                os.remove(solucion.icono_imagen.path)
+            solucion.icono_imagen = None
+
+        # ===== USAR IMAGEN PNG =====
+        elif tipo == "image":
+            imagen = request.FILES.get("icono_imagen")
+
+            if not imagen:
+                messages.error(request, "Debes subir una imagen PNG.")
+                return redirect("bienvenido")
+
+            if imagen.size > 2 * 1024 * 1024:
+                messages.error(request, "La imagen no debe superar 2MB.")
+                return redirect("bienvenido")
+
+            if not imagen.name.lower().endswith(".png"):
+                messages.error(request, "Solo se permiten imágenes PNG.")
+                return redirect("bienvenido")
+
+            # eliminar imagen anterior
+            if solucion.icono_imagen and os.path.isfile(solucion.icono_imagen.path):
+                os.remove(solucion.icono_imagen.path)
+
+            solucion.icono_imagen = imagen
+            solucion.icono_nombre = None
+            solucion.tipo_icono = "imagen"
+
         solucion.save()
-        
-        logger.info(f'Solución {solucion_id} actualizada por admin {admin_id}')
-        
-        # ✅ CORREGIDO: Respuesta con campos correctos
-        return JsonResponse({
-            'success': True,
-            'message': 'Solución actualizada exitosamente',
-            'solucion': {
-                'id': solucion.id,
-                'titulo': solucion.titulo,
-                'descripcion': solucion.descripcion,
-                'tipo_icono': solucion.tipo_icono,
-                'icono_nombre': solucion.icono_nombre,
-                'icono_imagen_url': solucion.icono_imagen.url if solucion.icono_imagen else None,
-                'categoria': solucion.categoria,
-                'url': solucion.url
-            }
-        })
-        
-    except Exception as e:
-        logger.error(f'Error al editar solución {solucion_id}: {str(e)}', exc_info=True)
-        return JsonResponse({
-            'success': False,
-            'error': 'Error al actualizar la solución'
-        }, status=500)
+        messages.success(request, "Solución actualizada correctamente.")
+        return redirect("bienvenido")
 
+def eliminar_solucion(request, id):
+    solucion = get_object_or_404(Solucion, id=id)
+    solucion.delete()
 
-@require_http_methods(["DELETE", "POST"])
-def eliminar_solucion(request, solucion_id):
-    """Vista para eliminar una solución"""
-    try:
-        # Validar autenticación
-        admin_id = request.session.get('catalogo_admin_id')
-        if not admin_id:
-            return JsonResponse({
-                'success': False,
-                'error': 'No estás autenticado como administrador'
-            }, status=403)
-        
-        # Obtener la solución
-        try:
-            solucion = Solucion.objects.get(id=solucion_id)
-        except Solucion.DoesNotExist:
-            return JsonResponse({
-                'success': False,
-                'error': 'Solución no encontrada'
-            }, status=404)
-        
-        # Verificar permisos
-        if solucion.id_admin.id_admin != admin_id:
-            return JsonResponse({
-                'success': False,
-                'error': 'No tienes permisos para eliminar esta solución'
-            }, status=403)
-        
-        # Guardar información antes de eliminar
-        titulo = solucion.titulo
-        
-        # ✅ CORREGIDO: Eliminar archivo de imagen si existe
-        if solucion.icono_imagen and hasattr(solucion.icono_imagen, 'path'):
-            try:
-                if default_storage.exists(solucion.icono_imagen.name):
-                    default_storage.delete(solucion.icono_imagen.name)
-            except Exception as e:
-                logger.warning(f'No se pudo eliminar el archivo de imagen: {str(e)}')
-        
-        # Eliminar la solución
-        solucion.delete()
-        
-        logger.info(f'Solución "{titulo}" (ID: {solucion_id}) eliminada por admin {admin_id}')
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Solución eliminada exitosamente'
-        })
-        
-    except Exception as e:
-        logger.error(f'Error al eliminar solución {solucion_id}: {str(e)}', exc_info=True)
-        return JsonResponse({
-            'success': False,
-            'error': 'Error al eliminar la solución'
-        }, status=500)
+    messages.success(request, 'La solución fue eliminada correctamente.')
+    return redirect('bienvenido')
+    

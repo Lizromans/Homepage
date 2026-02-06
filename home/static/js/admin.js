@@ -317,7 +317,7 @@
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinner"><circle cx="12" cy="12" r="10"></circle></svg> Agregando...';
 
-                    const response = await fetch('/api/agregar-solucion/', {
+                    const response = await fetch('agregar-solucion/', {
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': getCookie('csrftoken')
@@ -495,8 +495,26 @@
 // FUNCIONALIDADES FUERA DEL MÓDULO PRINCIPAL
 // ============================================================
 
-// NOTA: El manejo del login dropdown ahora está en el HTML inline
-// para evitar conflictos y tener mejor control del flujo
+// LOGIN DROPDOWN
+const loginTrigger = document.getElementById('loginTrigger');
+const loginDropdown = document.getElementById('loginDropdown');
+
+if (loginTrigger && loginDropdown) {
+    loginTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        loginDropdown.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!loginDropdown.contains(e.target) && !loginTrigger.contains(e.target)) {
+            loginDropdown.classList.remove('active');
+        }
+    });
+
+    loginDropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+}
 
 // ANIMATED COUNTER FOR TRUST SIGNALS
 const trustNumbers = document.querySelectorAll('.trust-number');
@@ -597,19 +615,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // CARD CLICK TO OPEN URL
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.info-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            const linkBtn = this.querySelector('.card-link-btn');
-            if (linkBtn) {
-                const url = linkBtn.getAttribute('data-url');
-                if (url) {
-                    window.open(url, '_blank');
-                }
-            }
-        });
-        
-        card.style.cursor = 'pointer';
-    });
     
     document.querySelectorAll('.card-link-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -626,24 +631,11 @@ const mobileMenu = document.querySelector('.mobile-menu');
 
 if (mobileMenuToggle && mobileMenu) {
     mobileMenuToggle.addEventListener('click', () => {
-        const isOpening = !mobileMenu.classList.contains('active');
-        
         mobileMenu.classList.toggle('active');
         mobileMenuToggle.setAttribute(
             'aria-expanded',
             mobileMenu.classList.contains('active')
         );
-        
-        // Si se está cerrando el menú móvil, cerrar también el dropdown de login
-        if (!isOpening) {
-            const mobileLoginDropdown = document.getElementById('mobileLoginDropdown');
-            const mobileLoginTrigger = document.getElementById('mobileLoginTrigger');
-            
-            if (mobileLoginDropdown && mobileLoginTrigger) {
-                mobileLoginDropdown.classList.remove('active');
-                mobileLoginTrigger.classList.remove('active');
-            }
-        }
     });
 }
 
@@ -709,7 +701,6 @@ if (!document.querySelector('style[data-sr-only]')) {
 document.addEventListener('DOMContentLoaded', function() {
     const mobileLoginTrigger = document.getElementById('mobileLoginTrigger');
     const mobileLoginDropdown = document.getElementById('mobileLoginDropdown');
-    const closeMobileDropdown = document.getElementById('closeMobileDropdown');
     
     if (mobileLoginTrigger && mobileLoginDropdown) {
         console.log('📱 Inicializando dropdown de login móvil...');
@@ -725,19 +716,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('🔄 Dropdown móvil toggled:', mobileLoginDropdown.classList.contains('active'));
         });
-        
-        // Botón de cerrar (X)
-        if (closeMobileDropdown) {
-            closeMobileDropdown.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                mobileLoginDropdown.classList.remove('active');
-                mobileLoginTrigger.classList.remove('active');
-                
-                console.log('✅ Dropdown móvil cerrado por botón X');
-            });
-        }
         
         // Cerrar dropdown al hacer clic fuera
         document.addEventListener('click', function(e) {
@@ -763,3 +741,27 @@ document.addEventListener('DOMContentLoaded', function() {
 console.log('%c¡Bienvenido a Gestión del Conocimiento!', 'color: #3db103; font-size: 24px; font-weight: bold;');
 console.log('%cRepositorio de Soluciones Tecnológicas del SENA', 'color: #50e5f9; font-size: 14px;');
 console.log('%c💡 ¿Interesado en contribuir? Contáctanos.', 'color: #666; font-size: 12px;');
+
+document.addEventListener("change", function (e) {
+
+    if (e.target.name === "editImageType") {
+
+        const form = e.target.closest("form");
+        const iconSection = form.querySelector(".editIconSection");
+        const imageSection = form.querySelector(".editImageSection");
+        const iconInput = iconSection.querySelector("input[type='text']");
+        const imageInput = imageSection.querySelector("input[type='file']");
+
+        // Ocultar ambos
+        iconSection.style.display = "none";
+        imageSection.style.display = "none";
+
+        // Limpiar valores
+        if (iconInput) iconInput.value = "";
+        if (imageInput) imageInput.value = "";
+
+        // Mostrar según elección
+        if (e.target.value === "icon") iconSection.style.display = "flex";
+        if (e.target.value === "image") imageSection.style.display = "flex";
+    }
+});

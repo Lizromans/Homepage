@@ -12,9 +12,9 @@ urlpatterns = [
     path('catalogo/editor/', views.editar_catalogo, name='editar_catalogo'),
 
     # API para manejar soluciones
-    path('api/agregar-solucion/', views.agregar_solucion, name='agregar_solucion'),
-    path('api/eliminar-solucion/<int:solucion_id>/', views.eliminar_solucion, name='eliminar_solucion'),
-    path('api/editar-solucion/<int:solucion_id>/', views.editar_solucion, name='editar_solucion'),
+    path('agregar-solucion/', views.agregar_solucion, name='agregar_solucion'),
+    path('eliminar-solucion/<int:id>/', views.eliminar_solucion, name='eliminar_solucion'),
+    path('editar-solucion/<int:id>/', views.editar_solucion, name='editar_solucion'),
 ]
 
 if settings.DEBUG:

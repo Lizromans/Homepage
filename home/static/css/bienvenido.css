@@ -302,6 +302,20 @@ body {
     max-height: 500px;
 }
 
+.mobile-login-dropdown .edit-icon {
+    position: absolute;
+    right: 14px;
+    top: 70%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+}
+
+.mobile-login-dropdown .edit-icon:hover {
+    color: var(--color-primary);
+}
+
 
 /* ============================================================
    5. LOGIN DROPDOWN
@@ -437,6 +451,32 @@ body {
 
 .login-form input::placeholder {
     color: #999;
+}
+
+
+/* Icono del ojo */
+.login-form .edit-icon {
+    position: absolute;
+    right: 14px;
+    top: 70%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-speed) ease;
+}
+
+/* Hover */
+.login-form .edit-icon:hover {
+    color: var(--color-primary);
+}
+
+/* Evitar selección o clicks raros */
+.login-form .edit-icon i {
+    pointer-events: none;
 }
 
 /* Botón enviar login */
@@ -2288,4 +2328,400 @@ html.restoring-scroll {
   color: #6c757d;
   background-color: transparent;
   pointer-events: none;
+}
+
+
+/* ==============================
+   OVERLAY
+============================== */
+.modal-overlay-evento {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(94, 93, 93, 0.27);
+    z-index: 9999;
+    padding: clamp(40px, 10vh, 60px);
+    overflow-y: auto;
+}
+
+/* 🔥 ESTA ERA LA CLAVE PARA QUE FUNCIONE SIN JS */
+.modal-overlay-evento:target {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+/* ==============================
+   CAJA DEL MODAL
+============================== */
+.modal-dialog-evento {
+    background: #fff;
+    border-radius: clamp(12px, 2vw, 20px);
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    animation: modalSlideIn 0.4s ease;
+    box-shadow: 0 clamp(6px, 1vw, 10px) clamp(30px, 6vw, 50px) rgba(0, 0, 0, 0.3);
+    margin: auto;
+}
+
+/* ==============================
+   BOTÓN CERRAR
+============================== */
+.modal-cerrar-evento {
+    position: absolute;
+    top: clamp(15px, 1vw, 25px);
+    right: clamp(15px, 2vw, 25px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #e0e0e0;
+    border-radius: 50%;
+    width: clamp(35px, 5vw, 45px);
+    height: clamp(35px, 5vw, 45px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    color: #666;
+    transition: all 0.3s ease;
+    z-index: 10;
+    text-decoration: none;
+}
+
+.modal-cerrar-evento:hover {
+    background: #f44336;
+    color: white;
+    border-color: #f44336;
+    transform: rotate(90deg);
+}
+
+/* ==============================
+   HEADER
+============================== */
+.modal-header-evento {
+    padding: 50px 50px 20px;
+    border-bottom: 3px solid #39A900;
+}
+
+.modal-header-evento h5 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #333;
+}
+
+/* ==============================
+   BODY
+============================== */
+.modal-body-evento {
+    padding: 40px;
+}
+
+.modal-body-evento form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==============================
+   GRID DE CAMPOS
+============================== */
+.row-evento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px 20px;
+}
+
+.col-evento {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.col-evento-full {
+    grid-column: 1 / -1;
+}
+
+.col-evento label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #444;
+}
+
+/* Inputs */
+.col-evento input,
+.col-evento textarea,
+.col-evento select {
+    padding: 12px;
+    font-size: 0.95rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.col-evento textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.col-evento input:focus,
+.col-evento textarea:focus,
+.col-evento select:focus {
+    outline: none;
+    border-color: #39A900;
+    box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+}
+
+.modal-body-evento img {
+  max-width: 200px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+.modal-footer-evento {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 1px solid #ddd;
+}
+
+/* ==============================
+   BOTONES
+============================== */
+.btn-evento {
+    display: flex;
+    align-items: center;
+    padding: clamp(10px, 2vh, 15px) clamp(20px, 2vw, 35px);
+    font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+    font-weight: 700;
+    border-radius: clamp(8px, 1.5vw, 12px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-evento-secondary {
+    background-color: transparent;
+    color: #666 !important;
+    border: 2px solid #e0e0e0;
+}
+
+.btn-evento-secondary:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+.btn-evento-primary {
+    background-color: #39A900;
+    color: #fff;
+    border: none;
+}
+
+.btn-evento-primary:hover {
+    background-color: #2d8000;
+    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* ==============================
+   ANIMACIONES
+============================== */
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.acciones-solucion {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* o flex-start si prefieres */
+}
+
+.btn-editar,
+.btn-eliminar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+}
+
+/* EDITAR */
+.btn-editar {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.btn-editar:hover {
+    background-color: #1976d2;
+}
+
+.btn-eliminar {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.btn-eliminar:hover {
+    background-color: #c62828;
+}
+
+i {
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.modal.fade.show {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.45);
+    animation: modalFadeIn 0.3s ease;
+}
+
+.modal-dialog.modal-dialog-centered {
+    width: clamp(300px, 34%, 520px);
+    margin: auto;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    animation: modalSlideIn 0.35s ease;
+}
+
+.modal-header {
+    position: relative;
+    padding: 26px 32px 18px;
+    background: #fff !important;
+    border-bottom: 2px solid #39A900;
+}
+
+.modal-header h5 {
+    margin: 0 auto;
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #020202;
+    text-align: center;
+}
+
+.modal-header .btn-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #f2f2f2;
+    border: 1px solid #dcdcdc;
+    opacity: 1;
+    transition: all 0.25s ease;
+}
+
+.modal-header .btn-close:hover {
+    background-color: #c70c0c;
+    color : #fff;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 28px 36px;
+    text-align: center;
+}
+
+.modal-body p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+.modal-body strong {
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
+    color: #444;
+}
+
+.modal-footer {
+    padding: 22px 36px 26px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.modal-footer .btn {
+    min-width: 150px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+}
+
+.modal-footer .btn{
+    background: #ffffff;
+    color: #6c757d;
+    border: 2px solid #d6d6d6;
+}
+
+.modal-footer .btn:hover {
+    background: #f5f5f5;
+}
+
+/* Botón acción rojo */
+.modal-footer .btn-eliminar {
+    background-color: #e53935;
+    border: none;
+    color: #fff;
+    min-width: 150px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    border: 2px solid #d6d6d6;
+}
+
+.modal-footer .btn-eliminar:hover {
+    background-color: #c62828;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-14px) scale(0.97);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }

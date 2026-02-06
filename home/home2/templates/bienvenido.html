@@ -30,7 +30,8 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <!-- CSS personalizado -->
     <link rel="stylesheet" href="{% static 'css/bienvenido.css' %}">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
 
@@ -121,6 +122,9 @@
                                     Contraseña
                                 </label>
                                 <input type="password" id="password" name="password" required placeholder="Ingresa tu contraseña">
+                                <span class="edit-icon" title="Mostrar contraseña">
+                                    <i class="fa fa-eye"></i>
+                                </span>
                             </div>
                             
                             <button type="submit" class="login-submit-btn">
@@ -202,6 +206,9 @@
                                 Contraseña
                             </label>
                             <input type="password" id="mobile-password" name="password" required placeholder="Ingresa tu contraseña">
+                            <span class="edit-icon" title="Mostrar contraseña">
+                                <i class="fa fa-eye"></i>
+                            </span>
                         </div>
                         
                         <button type="submit" class="login-submit-btn">
@@ -334,7 +341,26 @@
             <div class="card-container">
                 <!-- ===== TARJETAS DINÁMICAS DE LA BASE DE DATOS ===== -->
                 {% for solucion in soluciones_paginadas %}
-                <article class="info-card dynamic-card" data-category="{{ solucion.categoria }}" data-url="{{ solucion.url }}">
+                <article class="info-card dynamic-card">
+                    <div class="acciones-solucion">
+                        {% if request.session.catalogo_admin_id %} 
+                            <button type="button"
+                                    class="btn-editar"
+                                    data-tooltip="Editar"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEditarSolucion{{ solucion.id }}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button type="button"
+                                    class="btn-eliminar"
+                                    data-tooltip="Eliminar"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminarSolucion{{ solucion.id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        {% endif %}
+                    </div>
                     <!-- ===== CAMBIO PRINCIPAL: Mostrar icono basado en tipo ===== -->
                     <div class="card-icon">
                         {% if solucion.tipo_icono == 'imagen' and solucion.icono_imagen %}
@@ -449,35 +475,46 @@
             <!-- ===== PAGINACIÓN ===== -->
             {% if soluciones_paginadas.has_other_pages %}
             <nav aria-label="Page navigation example" class="mt-4">
-                <ul class="pagination justify-content-center">
+                    <ul class="pagination justify-content-center">
 
-                    <!-- Previous -->
-                    <li class="page-item {% if not soluciones_paginadas.has_previous %}disabled{% endif %}">
-                        <a class="page-link"
-                        href="{% if soluciones_paginadas.has_previous %}?page={{ soluciones_paginadas.previous_page_number }}{% else %}#{% endif %}"
-                        aria-label="Previous">
-                            <
-                        </a>
-                    </li>
-
-                    <!-- Números -->
-                    {% for num in soluciones_paginadas.paginator.page_range %}
-                        <li class="page-item {% if soluciones_paginadas.number == num %}active{% endif %}">
-                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        <!-- Previous -->
+                        <li class="page-item {% if not soluciones_paginadas.has_previous %}disabled{% endif %}">
+                            <a class="page-link"
+                            href="{% if soluciones_paginadas.has_previous %}
+                                        ?page={{ soluciones_paginadas.previous_page_number }}#soluciones
+                                    {% else %}
+                                        #soluciones
+                                    {% endif %}"
+                            aria-label="Previous">
+                                &lt;
+                            </a>
                         </li>
-                    {% endfor %}
 
-                    <!-- Next -->
-                    <li class="page-item {% if not soluciones_paginadas.has_next %}disabled{% endif %}">
-                        <a class="page-link"
-                        href="{% if soluciones_paginadas.has_next %}?page={{ soluciones_paginadas.next_page_number }}{% else %}#{% endif %}"
-                        aria-label="Next">
-                            >
-                        </a>
-                    </li>
+                        <!-- Números -->
+                        {% for num in soluciones_paginadas.paginator.page_range %}
+                            <li class="page-item {% if soluciones_paginadas.number == num %}active{% endif %}">
+                                <a class="page-link"
+                                href="?page={{ num }}#soluciones">
+                                    {{ num }}
+                                </a>
+                            </li>
+                        {% endfor %}
 
-                </ul>
-            </nav>
+                        <!-- Next -->
+                        <li class="page-item {% if not soluciones_paginadas.has_next %}disabled{% endif %}">
+                            <a class="page-link"
+                            href="{% if soluciones_paginadas.has_next %}
+                                        ?page={{ soluciones_paginadas.next_page_number }}#soluciones
+                                    {% else %}
+                                        #soluciones
+                                    {% endif %}"
+                            aria-label="Next">
+                                &gt;
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
             {% endif %}
         </section>
 
@@ -678,6 +715,182 @@
 </div>
 {% endif %}
 
+{% for solucion in soluciones_paginadas %}
+    {% if request.session.catalogo_admin_id %}
+
+    <div class="modal-overlay-evento" id="modalEditarSolucion{{ solucion.id }}">
+        <div class="modal-dialog-evento">
+
+            <a href="{% url 'bienvenido' %}" class="modal-cerrar-evento">&times;</a>
+
+            <div class="modal-header-evento">
+                <h5>Editar Solución</h5>
+            </div>
+
+            <div class="modal-body-evento">
+                <form method="POST"
+                    action="{% url 'editar_solucion' solucion.id %}"
+                    enctype="multipart/form-data"
+                    id="editSolutionForm{{ solucion.id }}">
+                    {% csrf_token %}
+
+                    <div class="row-evento">
+
+                        <!-- TÍTULO -->
+                        <div class="col-evento col-evento-full">
+                            <label>Título de la Solución</label>
+                            <input type="text" name="titulo"
+                                value="{{ solucion.titulo }}"
+                                maxlength="200" required>
+                        </div>
+
+                        <!-- DESCRIPCIÓN -->
+                        <div class="col-evento col-evento-full">
+                            <label>Descripción</label>
+                            <textarea name="descripcion" rows="3" maxlength="250" required>{{ solucion.descripcion }}</textarea>
+                        </div>
+
+                        <!-- CATEGORÍA -->
+                        <div class="col-evento">
+                            <label>Categoría</label>
+                            <select name="categoria" required>
+                                <option value="">Selecciona una categoría</option>
+                                <option value="innovacion" {% if solucion.categoria == "innovacion" %}selected{% endif %}>Innovación</option>
+                                <option value="investigacion" {% if solucion.categoria == "investigacion" %}selected{% endif %}>Investigación</option>
+                                <option value="academico" {% if solucion.categoria == "academico" %}selected{% endif %}>Académico</option>
+                            </select>
+                        </div>
+
+                        <!-- URL -->
+                        <div class="col-evento col-evento-full">
+                            <label>URL de Acceso</label>
+                            <input type="url" name="url"
+                                value="{{ solucion.url }}"
+                                maxlength="200" required>
+                        </div>
+
+                        <!-- TIPO REPRESENTACIÓN -->
+                        <div class="col-evento col-evento-full">
+                            <label>Tipo de Representación</label>
+
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio"
+                                        name="editImageType"
+                                        value="icon"
+                                        {% if solucion.icono_nombre %}checked{% endif %}>
+                                    <span>Icono SVG</span>
+                                </label>
+
+                                <label class="radio-option">
+                                    <input type="radio"
+                                        name="editImageType"
+                                        value="image"
+                                        {% if solucion.icono_imagen %}checked{% endif %}>
+                                    <span>Imagen PNG</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ===== ICONO SVG ===== -->
+                        <div class="col-evento col-evento-full editIconSection"
+                            style="{% if not solucion.icono_nombre %}display:none;{% endif %}">
+                            <label>Nombre del Icono</label>
+                            <input type="text"
+                                name="icono_nombre"
+                                id="editSolutionIcon{{ solucion.id }}"
+                                value="{{ solucion.icono_nombre|default:'' }}"
+                                maxlength="100">
+
+                            {% if solucion.icono_nombre %}
+                            <small style="color:#666;">Icono actual: {{ solucion.icono_nombre }}</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- ===== IMAGEN PNG ===== -->
+                        <div class="col-evento col-evento-full editImageSection">
+                            <label>Imagen PNG actual</label>
+
+                            {% if solucion.icono_imagen %}
+                            <div style="margin-bottom:10px;">
+                                <img src="{{ solucion.icono_imagen.url }}">
+                            </div>
+                            {% endif %}
+
+                            <label>Cambiar Imagen</label>
+                            <input type="file"
+                                name="icono_imagen"
+                                id="editSolutionImage{{ solucion.id }}"
+                                accept="image/png">
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer-evento">
+                        <a href="{% url 'bienvenido' %}" class="btn-evento btn-evento-secondary">Cancelar</a>
+                        <button type="submit" class="btn-evento btn-evento-primary">Guardar Cambios</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if request.session.catalogo_admin_id %}
+    <div class="modal fade"
+        id="modalEliminarSolucion{{ solucion.id }}"
+        tabindex="-1"
+        aria-hidden="true">
+        
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header ">
+                    <h5 class="modal-title">
+                        Confirmar eliminación
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body text-center">
+                    <p class="mb-2">
+                        ¿Estás seguro de que deseas eliminar esta solución?
+                    </p>
+                    <strong class="text">
+                        Esta acción no se puede deshacer.
+                    </strong>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <form method="POST"
+                        action="{% url 'eliminar_solucion' solucion.id %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn-eliminar ">
+                            <i class="fa fa-trash"></i>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
     <!-- Scroll to top button -->
     <button class="scroll-to-top" aria-label="Volver arriba" title="Volver arriba">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -715,6 +928,7 @@
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/admin.js' %}"></script>
     <script src="{% static 'js/mensajes.js' %}"></script>
+    <script src="{% static 'js/contraseña.js' %}"></script>
     <!-- Mensajes de alerta -->
     {% if messages %}
     <script>
