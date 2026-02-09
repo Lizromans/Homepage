@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
-
+import os
+from django.utils import timezone
+from datetime import timedelta
 
 class AdminManager(BaseUserManager):
     """Manager personalizado para el modelo Admin"""
@@ -168,7 +170,6 @@ class Solucion(models.Model):
     )
     
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_modificacion = models.DateTimeField(auto_now=True)
     
     class Meta:
         managed = True
@@ -181,12 +182,7 @@ class Solucion(models.Model):
         return self.titulo
     
     def get_icono_display(self):
-        """
-        Obtiene el icono para mostrar según el tipo.
-        
-        Returns:
-            dict: Información del icono con tipo y valor
-        """
+
         if self.tipo_icono == 'svg':
             return {
                 'tipo': 'svg',
@@ -197,12 +193,23 @@ class Solucion(models.Model):
                 'tipo': 'imagen',
                 'valor': self.icono_imagen.url if self.icono_imagen else None
             }
+
+    def es_nueva(self):
+        return self.fecha_creacion >= timezone.now() - timedelta(days=7)
+    
+    def delete(self, *args, **kwargs):
+        if self.icono_imagen and self.icono_imagen.name:
+            if os.path.isfile(self.icono_imagen.path):
+                os.remove(self.icono_imagen.path)
+
+        self.icono_imagen = None
+        self.icono_nombre = None
+        self.tipo_icono = None
+
+        super().delete(*args, **kwargs)
     
     def clean(self):
-        """
-        Validación personalizada del modelo.
-        Asegura que el icono correcto esté presente según el tipo.
-        """
+
         from django.core.exceptions import ValidationError
         
         if self.tipo_icono == 'svg' and not self.icono_nombre:

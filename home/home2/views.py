@@ -27,6 +27,8 @@ def bienvenido(request):
 
     total_soluciones = Solucion.objects.count()
     
+    soluciones = Solucion.objects.all().order_by('-fecha_creacion')
+
     context = {
         'soluciones_paginadas': soluciones_paginadas,
         'total_soluciones': total_soluciones,
@@ -57,7 +59,7 @@ def login_catalogo(request):
                 messages.success(request, f'¡Bienvenido al Panel de Administrador!')
                 return redirect('bienvenido')
             else:
-                messages.error(request, 'Contraseña incorrecta')
+                messages.error(request, 'Credenciales incorrectas.')
         except Admin.DoesNotExist:
             messages.error(request, 'Usuario no encontrado')
     
@@ -69,48 +71,6 @@ def logout_catalogo(request):
     request.session.flush()
     messages.success(request, 'Sesión cerrada exitosamente')
     return redirect('bienvenido')
-
-
-def editar_catalogo(request):
-    """Vista para editar el catálogo - requiere autenticación"""
-    # Verificar si está autenticado
-    if not request.session.get('catalogo_admin_id'):
-        messages.warning(request, 'Debes iniciar sesión primero')
-        return redirect('bienvenido') 
-    
-    # Obtener el admin actual
-    try:
-        admin = Admin.objects.get(id_admin=request.session['catalogo_admin_id'])
-    except Admin.DoesNotExist:
-        request.session.flush()
-        return redirect('bienvenido') 
-    
-    # Ruta del archivo HTML
-    file_path = os.path.join(settings.BASE_DIR, 'templates', 'bienvenido.html')
-    
-    if request.method == 'POST':
-        contenido = request.POST.get('contenido')
-        try:
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(contenido)
-            messages.success(request, '¡Solución guardado exitosamente!')
-        except Exception as e:
-            messages.error(request, f'Error al guardar: {str(e)}')
-        
-        return redirect('bienvenido')  
-    
-    # Leer el contenido actual
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            contenido = f.read()
-    except FileNotFoundError:
-        contenido = '<!-- Archivo no encontrado, crea tu contenido aquí -->'
-    
-    return render(request, 'bienvenido.html', {
-        'contenido': contenido,
-        'admin': admin
-    })
-
 
 @csrf_exempt
 @require_http_methods(["POST"])

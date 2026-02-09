@@ -342,6 +342,10 @@
                 <!-- ===== TARJETAS DINÁMICAS DE LA BASE DE DATOS ===== -->
                 {% for solucion in soluciones_paginadas %}
                 <article class="info-card dynamic-card" data-category="{{ solucion.categoria }}">
+                    {% if solucion.es_nueva and not request.session.catalogo_admin_id %}
+                        <span class="badge-nuevo">Nuevo</span>
+                    {% endif %}
+
                     <div class="acciones-solucion">
                         {% if request.session.catalogo_admin_id %} 
                             <button type="button"

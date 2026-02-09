@@ -9,7 +9,6 @@ urlpatterns = [
     # Catalogo
     path('catalogo/login/', views.login_catalogo, name='login_catalogo'),
     path('catalogo/logout/', views.logout_catalogo, name='logout_catalogo'),
-    path('catalogo/editor/', views.editar_catalogo, name='editar_catalogo'),
 
     # API para manejar soluciones
     path('agregar-solucion/', views.agregar_solucion, name='agregar_solucion'),
