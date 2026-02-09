@@ -75,9 +75,6 @@
     console.log(`📚 ${ICONS_CATALOG.length} íconos cargados`);
 
     const categories = ["Todas", ...new Set(ICONS_CATALOG.map(ic => ic.cat))];
-    let activeCategory = "Todas";
-    let searchText = "";
-    let selectedIcon = null;
 
     // ========================================================================
     // INICIALIZACIÓN PRINCIPAL
@@ -307,17 +304,18 @@
             adminModal.classList.remove('active');
             document.body.style.overflow = '';
             adminSolutionForm.reset();
-            selectedIcon = null;
             
             const input = document.getElementById("solutionIcon");
             const preview = document.getElementById("iconPreview");
             const popup = document.getElementById("catalogPopup");
+            const searchInp = document.getElementById("searchInput");
             
             if (input) input.value = '';
             if (preview) {
                 preview.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".35"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
             }
             if (popup) popup.classList.remove("open");
+            if (searchInp) searchInp.value = '';
             
             clearImagePreview();
             
@@ -442,6 +440,11 @@
 
         console.log('🎨 Inicializando catálogo de íconos...');
 
+        // Variables locales del catálogo principal
+        let activeCategory = "Todas";
+        let searchText = "";
+        let selectedIcon = null;
+
         // Renderizar tabs
         function renderTabs() {
             tabs.innerHTML = "";
@@ -534,10 +537,17 @@
 
         btnClose.addEventListener("click", () => {
             popup.classList.remove("open");
+            searchInp.value = '';
+            searchText = '';
         });
 
         popup.addEventListener("click", (e) => {
-            if (e.target === popup) popup.classList.remove("open");
+            // Cerrar si se hace clic en el backdrop (::before) o en el contenedor principal
+            if (e.target === popup || e.target.classList.contains('catalog-popup')) {
+                popup.classList.remove("open");
+                searchInp.value = '';
+                searchText = '';
+            }
         });
 
         searchInp.addEventListener("input", (e) => {
@@ -677,10 +687,17 @@
             
             btnClose.addEventListener("click", () => {
                 popup.classList.remove("open");
+                searchInp.value = '';
+                searchText = '';
             });
             
             popup.addEventListener("click", (e) => {
-                if (e.target === popup) popup.classList.remove("open");
+                // Cerrar si se hace clic en el backdrop o en el contenedor principal
+                if (e.target === popup || e.target.classList.contains('catalog-popup')) {
+                    popup.classList.remove("open");
+                    searchInp.value = '';
+                    searchText = '';
+                }
             });
             
             searchInp.addEventListener("input", (e) => {

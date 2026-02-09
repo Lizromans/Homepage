@@ -25,7 +25,7 @@ def bienvenido(request):
     page_number = request.GET.get('page')
     soluciones_paginadas = paginator.get_page(page_number)
 
-    total_soluciones = Solucion.objects.count() + 6
+    total_soluciones = Solucion.objects.count()
     
     context = {
         'soluciones_paginadas': soluciones_paginadas,
@@ -40,7 +40,7 @@ def login_catalogo(request):
     """Vista de login para el admin del catálogo"""
     # Si ya está autenticado, redirigir al editor
     if request.session.get('catalogo_admin_id'):
-        return redirect('bienvenido')  # ✅ Corregido: usar nombre de URL, no archivo
+        return redirect('bienvenido') 
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -54,7 +54,7 @@ def login_catalogo(request):
                 request.session['catalogo_admin_id'] = admin.id_admin
                 request.session['catalogo_admin_username'] = admin.username
                 
-                messages.success(request, f'¡Bienvenido {admin.username}!')
+                messages.success(request, f'¡Bienvenido al Panel de Administrador!')
                 return redirect('bienvenido')
             else:
                 messages.error(request, 'Contraseña incorrecta')
@@ -93,7 +93,7 @@ def editar_catalogo(request):
         try:
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(contenido)
-            messages.success(request, '¡Catálogo guardado exitosamente!')
+            messages.success(request, '¡Solución guardado exitosamente!')
         except Exception as e:
             messages.error(request, f'Error al guardar: {str(e)}')
         

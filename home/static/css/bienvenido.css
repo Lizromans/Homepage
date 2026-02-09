@@ -1,3 +1,6 @@
+/* ============================================================
+   1. VARIABLES GLOBALES
+   ============================================================ */
 :root {
     /* Colores */
     --color-primary:            #3db103;
@@ -104,12 +107,9 @@ body {
     transition: all var(--transition-speed) ease;
 }
 
-.header-logo {
+.header-logo,
+.header-gc-logo  {
     width: clamp(55px, 4vw, 65px);
-}
-
-.header-gc-logo {
-    width: clamp(55px, 6vw, 75px);
 }
 
 .header-logo:hover,
@@ -312,7 +312,6 @@ body {
 .mobile-login-dropdown .edit-icon:hover {
     color: var(--color-primary);
 }
-
 
 /* ============================================================
    5. LOGIN DROPDOWN
@@ -1557,7 +1556,7 @@ main {
     overflow:      hidden;
     transition:    border-color var(--transition-speed) ease;
     background:    #fafafa;
-    z-index: 100;
+    z-index:       1;
 }
 
 .input-row:focus-within {
@@ -1614,78 +1613,109 @@ main {
 .btn-catalog:hover {
     background: #2d8502;
 }
+* ── Popup flotante del catálogo ── */
 
-/* ── Popup flotante del catálogo ── */
+/* Backdrop detrás del popup */
+.catalog-popup::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.catalog-popup.open::before {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .catalog-popup {
-    position:       absolute;
-    top:            calc(100% + 6px);
-    left:           0;
-    right:          0;
+    position:       fixed;
+    top:            50%;
+    left:           50%;
+    transform:      translate(-50%, -50%) scale(0.9);
     background:     #fff;
-    border-radius:  14px;
-    box-shadow:     0 10px 36px rgba(0, 0, 0, 0.14);
-    z-index:        9999;
+    border-radius:  20px;
+    box-shadow:     0 8px 32px rgba(0, 0, 0, 0.15);
+    z-index:        100000;
     overflow:       hidden;
     opacity:        0;
-    transform:      translateY(-6px);
     pointer-events: none;
-    transition:     opacity 0.22s ease, transform 0.22s ease;
+    transition:     opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    width:          90%;
+    max-width:      600px;                          
+    max-height:     70vh;                           
+    display:        none;
+    flex-direction: column;
+    visibility:     hidden;
 }
 
 .catalog-popup.open {
     opacity:        1;
-    transform:      translateY(0);
+    transform:      translate(-50%, -50%) scale(1); 
     pointer-events: auto;
+    visibility:     visible;                       
+    display:        flex;                           
 }
 
 /* Header del popup */
 .catalog-header {
     display:        flex;
     align-items:    center;
-    justify-content: space-between;
-    padding:        11px 14px 8px;
-    border-bottom:  1px solid #ece;
+    justify-content:space-between;
+    padding:        12px 16px 8px;                 
+    border-bottom:  none;
+    flex-shrink:    0;
 }
 
 .catalog-header span {
-    font-size:  clamp(0.75rem, 1.2vw, 0.82rem);
+    font-size:  clamp(0.85rem, 1.3vw, 0.95rem);
     font-weight: 600;
     color:      #222;
 }
 
 .catalog-header .close-btn {
-    background:    none;
+    background:    transparent;
     border:        none;
     cursor:        pointer;
     color:         #999;
-    font-size:     20px;
+    font-size:     28px;                            /* ✅ X más grande */
     line-height:   1;
-    padding:       2px 6px;
+    padding:       0;
+    width:         32px;
+    height:        32px;
+    display:       flex;
+    align-items:   center;
+    justify-content: center;
     border-radius: 6px;
-    transition:    background 0.15s;
+    transition:    background 0.15s, color 0.15s;
 }
 
 .catalog-header .close-btn:hover {
-    background: #f2f2f2;
-    color:      #555;
+    background: #f5f5f5;
+    color:      #333;
 }
 
 /* Buscador dentro del popup */
 .catalog-search {
-    padding: 8px 12px 4px;
+    padding:     0 16px 12px;                       /* ✅ Menos padding */
+    flex-shrink: 0;
 }
 
 .catalog-search input {
     width:         100%;
-    border:        1.5px solid #ddd;
-    border-radius: 8px;
-    padding:       6px 10px;
-    font-size:     clamp(0.75rem, 1.15vw, 0.82rem);
+    border:        1.5px solid #e0e0e0;
+    border-radius: 10px;                            /* ✅ Menos redondeado */
+    padding:       10px 14px;                       /* ✅ Menos padding */
+    font-size:     0.9rem;                          /* ✅ Texto más pequeño */
     font-family:   inherit;
     outline:       none;
     color:         #333;
     background:    #fafafa;
-    transition:    border-color var(--transition-speed) ease;
+    transition:    border-color var(--transition-speed) ease, background 0.2s;
 }
 
 .catalog-search input:focus {
@@ -1693,35 +1723,46 @@ main {
     background:   #fff;
 }
 
+.catalog-search input::placeholder {
+    color:        #999;
+}
+
 /* Tabs de categoría */
 .catalog-tabs {
     display:        flex;
-    gap:            5px;
-    padding:        8px 12px 4px;
+    gap:            6px;
+    padding:        0 16px 12px;
     overflow-x:     auto;
-    scrollbar-width: none;
+    overflow-y:     hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #d0d0d0 transparent;
+    flex-shrink:    0;
 }
 
-.catalog-tabs::-webkit-scrollbar {
-    display: none;
-}
+
+.catalog-tabs::-webkit-scrollbar        { height: 6px; }
+.catalog-tabs::-webkit-scrollbar-track  { background: transparent; }
+.catalog-tabs::-webkit-scrollbar-thumb  { background: #d0d0d0; border-radius: 3px; }
+.catalog-tabs::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
 
 .catalog-tabs button {
     flex-shrink:   0;
-    background:    #f2f2f5;
+    background:    #f5f5f5;
     border:        none;
-    border-radius: 18px;
-    padding:       clamp(3px, 0.6vw, 5px) clamp(9px, 1.5vw, 13px);
-    font-size:     clamp(0.7rem, 1.1vw, 0.78rem);
+    border-radius: 18px;                            /* ✅ Menos redondeado */
+    padding:       6px 14px;                        /* ✅ Menos padding */
+    font-size:     0.85rem;                         /* ✅ Texto más pequeño */
     font-weight:   500;
     color:         #666;
     cursor:        pointer;
     font-family:   inherit;
-    transition:    background 0.15s, color 0.15s;
+    transition:    background 0.2s, color 0.2s;
+    white-space:   nowrap;
 }
 
 .catalog-tabs button:hover {
-    background: #e4e4ec;
+    background: #e8e8e8;
+    color:      #333;
 }
 
 .catalog-tabs button.active {
@@ -1729,68 +1770,74 @@ main {
     color:      #fff;
 }
 
-/* ── Grid de iconos ── */
+/* ── Grid de iconos (SIN SCROLL) ── */
 .catalog-grid {
     display:              grid;
     grid-template-columns: repeat(7, 1fr);
-    gap:                  3px;
-    padding:              8px 10px 12px;
-    max-height:           210px;
-    overflow-y:           auto;
-    scrollbar-width:      thin;
-    scrollbar-color:      #ccc transparent;
+    gap:                  6px;
+    padding:              10px 16px 16px;
+    overflow:             visible;                  /* ✅ Sin scroll */
+    flex:                 1;
 }
 
-.catalog-grid::-webkit-scrollbar        { width: 5px; }
-.catalog-grid::-webkit-scrollbar-track  { background: transparent; }
-.catalog-grid::-webkit-scrollbar-thumb  { background: #ccc; border-radius: 3px; }
+/* Removidos los estilos de scrollbar del grid */
 
 /* Celda individual */
-.icon-cell {
+.catalog-item {
     aspect-ratio:   1;
     display:        flex;
+    flex-direction: column;
     align-items:    center;
     justify-content: center;
-    border-radius:  8px;
+    gap:            4px;                            /* ✅ Menos espacio */
+    border-radius:  8px;                            /* ✅ Menos redondeado */
     cursor:         pointer;
-    color:          #444;
+    color:          #333;
+    padding:        10px 4px;                       /* ✅ Menos padding */
     position:       relative;
-    transition:     background 0.15s, transform 0.1s, color 0.15s;
+    transition:     background 0.2s, transform 0.15s, color 0.2s;
 }
 
-.icon-cell:hover {
-    background: rgba(61, 177, 3, 0.1);
+.catalog-item:hover {
+    background: rgba(61, 177, 3, 0.08);
     color:      var(--color-primary);
-    transform:  scale(1.1);
+    transform:  scale(1.05);                        /* ✅ Menos escala */
 }
 
-.icon-cell.selected {
+.catalog-item svg {
+    width:  28px;                                   /* ✅ Iconos más pequeños */
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.catalog-item span {
+    font-size:   0.7rem;                            /* ✅ Texto más pequeño */
+    font-weight: 500;
+    text-align:  center;
+    line-height: 1.2;
+    color:       inherit;
+    max-width:   100%;
+    overflow:    hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.catalog-item.selected {
     background: var(--color-primary);
     color:      #fff;
     box-shadow: 0 2px 8px rgba(61, 177, 3, 0.35);
 }
 
-.icon-cell svg {
-    width:  clamp(18px, 2.5vw, 22px);
-    height: clamp(18px, 2.5vw, 22px);
+/* Texto "Icono actual:" debajo del popup */
+.editIconSection small,
+#iconSection small {
+    display:     block;
+    margin-top:  12px;
+    font-size:   0.875rem;
+    color:       #666;
+    font-weight: 400;
 }
 
-/* Tooltip nombre del icono */
-.icon-cell[data-tooltip]:hover::after {
-    content:    attr(data-tooltip);
-    position:   absolute;
-    bottom:     calc(100% + 4px);
-    left:       50%;
-    transform:  translateX(-50%);
-    background: #1a1a2e;
-    color:      #fff;
-    font-size:  clamp(9px, 1vw, 10px);
-    padding:    3px 7px;
-    border-radius: 5px;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index:    10;
-}
 
 /* ============================================================
    14. SCROLL TO TOP
@@ -2327,113 +2374,122 @@ html.restoring-scroll {
 }
 
 
-/* ==============================
-   OVERLAY
-============================== */
+/* ════OVERLAY Y CONTENEDOR DEL MODAL══════════════ */
+
 .modal-overlay-evento {
-    display: none;
-    position: fixed;
-    inset: 0;
+    display:            none;
+    position:           fixed;
+    inset:              0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(94, 93, 93, 0.27);
-    z-index: 9999;
-    padding: clamp(40px, 10vh, 60px);
+    height: 103%;
+    background:         rgba(44, 44, 44, 0.92);
+    backdrop-filter:    blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index:            10000;
+    padding:            clamp(16px, 3vw, 40px);
+    animation:          fadeIn var(--transition-speed) ease;
     overflow-y: auto;
 }
 
-/* 🔥 ESTA ERA LA CLAVE PARA QUE FUNCIONE SIN JS */
 .modal-overlay-evento:target {
-    display: flex;
+    display:        flex;
+    align-items:    center;
     justify-content: center;
-    align-items: center;
     animation: modalFadeIn 0.3s ease;
 }
 
-/* ==============================
-   CAJA DEL MODAL
-============================== */
 .modal-dialog-evento {
-    background: #fff;
-    border-radius: clamp(12px, 2vw, 20px);
-    width: 90%;
-    max-width: 800px;
-    position: relative;
-    animation: modalSlideIn 0.4s ease;
-    box-shadow: 0 clamp(6px, 1vw, 10px) clamp(30px, 6vw, 50px) rgba(0, 0, 0, 0.3);
+    background:    var(--color-bg-white);
+    border-radius: 24px;
+    max-width:     800px;
+    width:         100%;
+    box-shadow:    0 25px 50px rgba(0, 0, 0, 0.18);
+    border:        1px solid rgba(61, 177, 3, 0.25);
+    animation:     slideUp 0.4s ease;
+    position:      relative;
+    overflow:      visible;
     margin: auto;
 }
 
-/* ==============================
-   BOTÓN CERRAR
-============================== */
+/* ════BOTÓN CERRAR══════════════ */
+
 .modal-cerrar-evento {
-    position: absolute;
-    top: clamp(15px, 1vw, 25px);
-    right: clamp(15px, 2vw, 25px);
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #e0e0e0;
-    border-radius: 50%;
-    width: clamp(35px, 5vw, 45px);
-    height: clamp(35px, 5vw, 45px);
-    display: flex;
+    position:       absolute;
+    top:            clamp(18px, 3vw, 30px);
+    right:          clamp(18px, 3vw, 30px);
+    background:     rgba(49, 49, 49, 0.1);
+    border:         none;
+    width:          clamp(34px, 4.5vw, 42px);
+    height:         clamp(34px, 4.5vw, 42px);
+    border-radius:  12px;
+    display:        flex;
+    align-items:    center;
     justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-    color: #666;
-    transition: all 0.3s ease;
-    z-index: 10;
+    cursor:         pointer;
+    color:          #fff;
+    transition:     background var(--transition-speed) ease,
+                    transform  var(--transition-speed) ease;
+    flex-shrink:    0;
+    z-index:        10;
     text-decoration: none;
+    font-size:      clamp(1.2rem, 2.5vw, 1.6rem);
 }
 
 .modal-cerrar-evento:hover {
-    background: #f44336;
-    color: white;
-    border-color: #f44336;
-    transform: rotate(90deg);
+    background: rgba(255, 59, 48, 0.22);
+    transform:  rotate(90deg);
+    color:      #fff;
 }
 
-/* ==============================
-   HEADER
-============================== */
+/* ════HEADER DEL MODAL════════ */
+
 .modal-header-evento {
-    padding: 50px 50px 20px;
-    border-bottom: 3px solid #39A900;
+    display:        flex;
+    justify-content: space-between;
+    align-items:    center;
+    padding:        clamp(18px, 3vw, 30px);
+    background:     linear-gradient(135deg,
+                        rgba(61, 177, 3, 0.96)  0%,
+                        rgba(80, 229, 249, 0.92) 100%);
+    border-bottom:  1px solid rgba(255, 255, 255, 0.12);
+    border-top-right-radius: 24px;
+    border-top-left-radius:  24px;
 }
 
-.modal-header-evento h5 {
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #333;
+.modal-header-evento h2 {
+    color:      #000;
+    font-size:  clamp(1.1rem, 2.2vw, 1.5rem);
+    font-weight: 700;
+    margin:     0;
+    display:    flex;
+    align-items: center;
+    gap:        clamp(8px, 1.2vw, 14px);
 }
 
-/* ==============================
-   BODY
-============================== */
+/* ════BODY DEL MODAL═════════ */
+
 .modal-body-evento {
-    padding: 40px;
+    padding: clamp(18px, 3vw, 30px);
 }
 
 .modal-body-evento form {
-    display: flex;
+    display:        flex;
     flex-direction: column;
 }
 
-/* ==============================
-   GRID DE CAMPOS
-============================== */
+/* ══════GRID DE CAMPOS═════════════════ */
+
 .row-evento {
-    display: grid;
+    display:              grid;
     grid-template-columns: 1fr 1fr;
-    gap: 25px 20px;
+
 }
 
 .col-evento {
-    display: flex;
+    display:        flex;
+    margin-bottom:  clamp(16px, 2.5vw, 24px);
     flex-direction: column;
-    gap: 8px;
+    position:       relative;
 }
 
 .col-evento-full {
@@ -2441,103 +2497,378 @@ html.restoring-scroll {
 }
 
 .col-evento label {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #444;
+    color:       #111;
+    font-weight: 600;
+    font-size:   clamp(0.8rem, 1.3vw, 0.9rem);
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    margin-bottom: 0;
 }
 
-/* Inputs */
+.col-evento label svg {
+    width:      16px;
+    height:     16px;
+    flex-shrink: 0;
+    color:      var(--color-text-light);
+}
+
+/* ════════INPUTS, TEXTAREA Y SELECT═══════════════ */
+
 .col-evento input,
 .col-evento textarea,
 .col-evento select {
-    padding: 12px;
-    font-size: 0.95rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    background-color: #fff;
-    transition: all 0.3s ease;
-}
-
-.col-evento textarea {
-    min-height: 100px;
-    resize: vertical;
+    background:     #fafafa;
+    border:         1.5px solid #c8c8c8;
+    border-radius:  12px;
+    padding:        clamp(9px, 1.3vw, 13px) 16px;
+    color:          #111;
+    font-size:      clamp(0.82rem, 1.3vw, 0.92rem);
+    font-family:    inherit;
+    transition:     border-color var(--transition-speed) ease,
+                    box-shadow   var(--transition-speed) ease,
+                    background   var(--transition-speed) ease;
 }
 
 .col-evento input:focus,
 .col-evento textarea:focus,
 .col-evento select:focus {
-    outline: none;
-    border-color: #39A900;
-    box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+    outline:      none;
+    border-color: var(--color-primary);
+    background:   rgba(61, 177, 3, 0.06);
+    box-shadow:   0 0 0 3px rgba(61, 177, 3, 0.18);
 }
 
-.modal-body-evento img {
-  max-width: 200px;
-  height: auto;
-  object-fit: contain;
+.col-evento input::placeholder,
+.col-evento textarea::placeholder {
+    color: #999;
 }
 
-/* ==============================
-   FOOTER
-============================== */
-.modal-footer-evento {
+.col-evento textarea {
+    resize:     vertical;
+    min-height: 100px;
+}
+
+.col-evento select {
+    cursor:     pointer;
+    appearance: auto;
+}
+
+/* ══RADIO BUTTONS PARA TIPO DE IMAGEN═══════════ */
+
+.radio-group {
     display: flex;
-    justify-content: flex-end;
     gap: 1rem;
-    padding-top: 25px;
-    margin-top: 25px;
-    border-top: 1px solid #ddd;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
 }
 
-/* ==============================
-   BOTONES
-============================== */
-.btn-evento {
+.radio-option {
     display: flex;
     align-items: center;
-    padding: clamp(10px, 2vh, 15px) clamp(20px, 2vw, 35px);
-    font-size: clamp(0.9rem, 1.6vw, 1.05rem);
-    font-weight: 700;
-    border-radius: clamp(8px, 1.5vw, 12px);
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    flex: 1;
+    min-width: 140px;
+}
+
+.radio-option:hover {
+    border-color: var(--color-primary) !important;
+    background: rgba(61, 177, 3, 0.05);
+}
+
+.radio-option input[type="radio"] {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.radio-option span {
+    font-weight: 500;
+    color: #444;
+}
+
+.radio-option input[type="radio"]:checked + span {
+    color: var(--color-primary) ;
+    font-weight: 600;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+    border-color: var(--color-primary) !important;
+    background: rgba(61, 177, 3, 0.1);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   INPUT ROW - SELECTOR DE ICONOS
+   ══════════════════════════════════════════════════════════ */
+
+.input-row {
+    display:       flex;
+    align-items:   stretch;
+    border:        1.5px solid #c8c8c8;
+    border-radius: 12px;
+    overflow:      hidden;
+    transition:    border-color var(--transition-speed) ease;
+    background:    #fafafa;
+    z-index:       1;
+}
+
+.input-row:focus-within {
+    border-color: var(--color-primary);
+    box-shadow:   0 0 0 3px rgba(61, 177, 3, 0.18);
+}
+
+/* Miniatura del icono activo */
+.icon-preview {
+    display:        flex;
+    align-items:    center;
+    justify-content: center;
+    width:          clamp(38px, 5vw, 46px);
+    min-width:      clamp(38px, 5vw, 46px);
+    background:     #eeeeee;
+    border-right:   1px solid #ddd;
+    color:          var(--color-primary);
+}
+
+/* Campo de texto readonly */
+.input-row input[type="text"] {
+    flex:           1;
+    min-width:      0;
+    border:         none;
+    border-radius:  0;
+    background:     transparent;
+    box-shadow:     none;
+    outline:        none;
+    padding:        0 12px;
+    font-size:      clamp(0.8rem, 1.3vw, 0.88rem);
+    color:          #333;
+    height:         clamp(38px, 5vw, 46px);
+    font-family:    inherit;
+}
+
+.input-row input[type="text"]::placeholder {
+    color: #aaa;
+}
+
+/* Botón que abre el catálogo */
+.btn-catalog {
+    display:        flex;
+    align-items:    center;
+    justify-content: center;
+    width:          clamp(38px, 5vw, 46px);
+    min-width:      clamp(38px, 5vw, 46px);
+    background:     var(--color-primary);
+    border:         none;
+    cursor:         pointer;
+    color:          #fff;
+    transition:     background var(--transition-speed) ease;
+}
+
+.btn-catalog:hover {
+    background: #2d8502;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ÁREA DE CARGA DE IMAGEN PNG
+   ══════════════════════════════════════════════════════════ */
+
+.image-upload-area {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.upload-box {
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    background: #fafafa;
+    position: relative;
+    min-height: 180px;
+    max-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.upload-box:hover {
+    border-color: var(--color-primary);
+    background: rgba(61, 177, 3, 0.05);
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.upload-content svg {
+    color: var(--color-text-light);
+}
+
+.upload-text {
+    font-size: 0.9rem;
+    color: var(--color-text-dark);
+    font-weight: 500;
+    margin: 0;
+}
+
+.upload-hint {
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+/* Container de preview de imagen */
+.image-preview-container {
+    display: none;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    max-height: 240px;
+    padding: 0.5rem;
+}
+
+.image-preview-container img {
+    max-width: 80%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de eliminar imagen */
+.remove-image-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: #ef4444;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.remove-image-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.remove-image-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Cuando hay imagen visible, ocultar el upload content */
+.upload-box:has(.image-preview-container[style*="display: flex"]) .upload-content {
+    display: none !important;
+}
+
+/* Imagen actual en el modal de editar */
+.modal-body-evento img {
+    max-width: 200px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER Y BOTONES
+   ══════════════════════════════════════════════════════════ */
+
+.modal-footer-evento {
+    display:        flex;
+    gap:            clamp(10px, 1.8vw, 18px);
+    justify-content: flex-end;
+    margin-top:     auto;
+    padding-top:    clamp(16px, 2.2vw, 22px);
+    border-top:     1px solid #e8e8e8;
+}
+
+.btn-evento {
+    padding:       clamp(9px, 1.3vw, 13px) clamp(18px, 2.8vw, 26px);
+    border-radius: 12px;
+    font-weight:   600;
+    font-size:     clamp(0.82rem, 1.3vw, 0.92rem);
+    cursor:        pointer;
+    border:        none;
+    display:       flex;
+    align-items:   center;
+    gap:           8px;
+    transition:    transform    var(--transition-speed) ease,
+                   box-shadow  var(--transition-speed) ease,
+                   background  var(--transition-speed) ease;
     text-decoration: none;
 }
 
 .btn-evento-secondary {
-    background-color: transparent;
-    color: #666 !important;
-    border: 2px solid #e0e0e0;
+    background: #f0f0f0;
+    color:      #444 !important;
 }
 
 .btn-evento-secondary:hover {
-    background-color: #f5f5f5;
-    transform: translateY(-2px);
+    background: #e4e4e4;
+    transform:  translateY(-2px);
 }
 
 .btn-evento-primary {
-    background-color: #39A900;
-    color: #fff;
-    border: none;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #2d8502 100%);
+    color:      #fff;
+    box-shadow: 0 4px 15px rgba(61, 177, 3, 0.3);
 }
 
 .btn-evento-primary:hover {
-    background-color: #2d8000;
-    box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3);
-    transform: translateY(-2px);
+    transform:  translateY(-2px);
+    box-shadow: 0 6px 20px rgba(61, 177, 3, 0.4);
 }
 
-/* ==============================
+.btn-evento svg {
+    flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════
    ANIMACIONES
-============================== */
-@keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+   ══════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-@keyframes modalSlideIn {
+@keyframes slideUp {
     from {
-        transform: translateY(-50px);
+        transform: translateY(30px);
         opacity: 0;
     }
     to {
@@ -2546,42 +2877,238 @@ html.restoring-scroll {
     }
 }
 
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .row-evento {
+        grid-template-columns: 1fr;
+        gap: clamp(10px, 2vw, 16px);
+    }
+    
+    .modal-overlay-evento {
+        padding: 1rem;
+    }
+    
+    .modal-dialog-evento {
+        width: 95%;
+    }
+    
+    .modal-header-evento,
+    .modal-body-evento {
+        padding: clamp(16px, 2.5vw, 24px);
+    }
+    
+    .radio-option {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-footer-evento {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .btn-evento {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 .acciones-solucion {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end; /* o flex-start si prefieres */
+    gap: 8px;
+    justify-content: flex-end;
+    margin-bottom: 12px;
 }
+
+/* ============================================================
+   TOOLTIPS MODERNOS PARA BOTONES
+   ============================================================ */
+
+.btn-editar[data-tooltip],
+.btn-eliminar[data-tooltip] {
+    position: relative;
+}
+
+.btn-editar[data-tooltip]::after,
+.btn-eliminar[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-editar[data-tooltip]::before,
+.btn-eliminar[data-tooltip]::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.btn-editar[data-tooltip]:hover::after,
+.btn-eliminar[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.btn-editar[data-tooltip]:hover::before,
+.btn-eliminar[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+/* Variante de tooltip para el botón editar (azul) */
+.btn-editar[data-tooltip]::after {
+    background: linear-gradient(135deg,
+        #2f8a02 0%,
+        #3db103 55%,
+        #6fdc32 100%);
+}
+
+.btn-editar[data-tooltip]::before {
+    border-top-color: #3db103;
+}
+
+/* Variante de tooltip para el botón eliminar (rojo) */
+.btn-eliminar[data-tooltip]::after {
+    background: linear-gradient(135deg,
+        #ff4d4f 0%,
+        #ff6b6b 60%,
+        #ffd6d6 100%);
+}
+
+.btn-eliminar[data-tooltip]::before {
+    border-top-color: #ff4d4f;
+}
+
+
+/* ============================================================
+   BOTONES DE EDITAR Y ELIMINAR - DISEÑO MODERNO
+   ============================================================ */
 
 .btn-editar,
 .btn-eliminar {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 8px 8px;
-    font-size: 0.9rem;
-    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* EDITAR */
+/* Efecto de onda al hacer click */
+.btn-editar::before,
+.btn-eliminar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-editar:active::before,
+.btn-eliminar:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* BOTÓN EDITAR - Azul moderno con gradiente */
 .btn-editar {
-    background-color: #2196f3;
+    background: linear-gradient(135deg,
+        #2f8a02 0%,
+        #3db103 55%,
+        #6fdc32 100%);
     color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-editar:hover {
-    background-color: #1976d2;
+    background: linear-gradient(135deg,
+        #2f8a02 0%,
+        #3db103 55%,
+        #6fdc32 100%);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
 }
 
+.btn-editar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(102, 234, 120, 0.3);
+}
+
+/* BOTÓN ELIMINAR - Rojo moderno con gradiente */
 .btn-eliminar {
-    background-color: #f44336;
+    background: linear-gradient(135deg,
+        #ff4d4f 0%,
+        #ff6b6b 60%,
+        #ffd6d6 100%);
     color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
 .btn-eliminar:hover {
-    background-color: #c62828;
+    background: linear-gradient(135deg,
+        #e63a3c 0%,
+        #ff4d4f 60%,
+        #ffb3b3 100%);
+    box-shadow: 0 4px 16px rgba(255, 77, 79, 0.45);
+    transform: translateY(-2px);
+}
+
+.btn-eliminar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+}
+
+
+/* Iconos dentro de los botones */
+.btn-editar i,
+.btn-eliminar i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-editar:hover i {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.btn-eliminar:hover i {
+    transform: scale(1.15);
 }
 
 i {
@@ -2724,7 +3251,7 @@ i {
 
 
 /* ============================================================
-   MODAL DE ELIMINAR - 100% PERSONALIZADO
+   MODAL DE ELIMINAR 
    ============================================================ */
 
 .modal-delete-overlay {
@@ -2734,12 +3261,14 @@ i {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 10000;
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-delete-overlay.active {
@@ -2749,120 +3278,272 @@ i {
 
 .modal-delete-dialog {
     width: 90%;
-    max-width: 500px;
-    transform: scale(0.7);
-    transition: transform 0.3s ease;
+    max-width: 480px;
+    transform: scale(0.7) translateY(50px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-delete-overlay.active .modal-delete-dialog {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
 }
 
 .modal-delete-content {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+    position: relative;
+}
+
+/* Icono decorativo de advertencia */
+.modal-delete-content::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.15) 100%);
+    border-radius: 50%;
+    z-index: 0;
 }
 
 .modal-delete-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 28px 28px 20px;
+    border-bottom: 2px solid rgba(239, 68, 68, 0.1);
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
 }
 
 .modal-delete-title {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Icono de advertencia en el título */
+.modal-delete-title::before {
+    content: '⚠';
+    font-size: 1.75rem;
+    -webkit-text-fill-color: #dc2626;
+    background: none;
+    animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
 }
 
 .modal-delete-close,
 .btn-close {
-    background: transparent;
+    background: rgba(239, 68, 68, 0.05);
     border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .modal-delete-close:hover,
 .btn-close:hover {
-    background: #f3f4f6;
+    background: rgba(239, 68, 68, 0.15);
+    transform: rotate(90deg);
 }
 
 .btn-close::before {
     content: "×";
-    font-size: 24px;
-    color: #6b7280;
+    font-size: 28px;
+    color: #dc2626;
     line-height: 1;
+    font-weight: 300;
 }
 
 .modal-delete-body {
-    padding: 24px;
+    padding: 32px 28px;
     text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Icono grande de advertencia en el body */
+.modal-delete-body::before {
+    content: '🗑️';
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 20px;
+    animation: shake-trash 3s infinite;
+}
+
+@keyframes shake-trash {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: rotate(-5deg);
+    }
+    20%, 40%, 60%, 80% {
+        transform: rotate(5deg);
+    }
 }
 
 .modal-delete-body p {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     color: #4b5563;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.modal-delete-body p:first-of-type {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #1f2937;
 }
 
 .modal-delete-body strong {
     color: #dc2626;
-    font-weight: 600;
+    font-weight: 700;
+    background: rgba(220, 38, 38, 0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
 }
 
 .modal-delete-footer {
-    padding: 16px 24px;
-    border-top: 1px solid #e5e7eb;
+    padding: 20px 28px 28px;
+    border-top: 2px solid rgba(229, 231, 235, 0.5);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+    position: relative;
+    z-index: 1;
 }
 
+/* Botón Cancelar mejorado */
 .modal-delete-footer .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
     background: white;
-    color: #374151;
+    color: #6b7280;
     font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-delete-footer .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(107, 114, 128, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.modal-delete-footer .btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .modal-delete-footer .btn:hover {
     background: #f9fafb;
     border-color: #9ca3af;
+    color: #374151;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.modal-delete-footer .btn:active {
+    transform: translateY(0);
+}
+
+/* Botón Eliminar mejorado */
 .modal-delete-footer .btn-eliminar {
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 12px 28px;
+    border-radius: 12px;
     border: none;
-    background: #dc2626;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
     font-size: 0.95rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-delete-footer .btn-eliminar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.modal-delete-footer .btn-eliminar:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .modal-delete-footer .btn-eliminar:hover {
-    background: #b91c1c;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    transform: translateY(-2px);
+}
+
+.modal-delete-footer .btn-eliminar:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+}
+
+.modal-delete-footer .btn-eliminar i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.modal-delete-footer .btn-eliminar:hover i {
+    transform: scale(1.2);
 }
 
 /* Responsive */
@@ -2872,7 +3553,25 @@ i {
         margin: 0 auto;
     }
     
+    .modal-delete-header {
+        padding: 24px 20px 16px;
+    }
+    
+    .modal-delete-title {
+        font-size: 1.25rem;
+    }
+    
+    .modal-delete-body {
+        padding: 24px 20px;
+    }
+    
+    .modal-delete-body::before {
+        font-size: 3rem;
+        margin-bottom: 16px;
+    }
+    
     .modal-delete-footer {
+        padding: 16px 20px 24px;
         flex-direction: column-reverse;
     }
     
@@ -2880,5 +3579,6 @@ i {
     .modal-delete-footer .btn-eliminar {
         width: 100%;
         justify-content: center;
+        padding: 14px 24px;
     }
 }

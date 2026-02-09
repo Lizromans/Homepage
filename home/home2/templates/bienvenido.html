@@ -7,29 +7,42 @@
     <meta name="description" content="Gestión del Conocimiento - Repositorio de Soluciones Tecnológicas del SENA. Plataforma colaborativa para gestión de proyectos de investigación, recursos educativos y herramientas innovadoras.">
     <meta name="keywords" content="SENA, tecnología, investigación, innovación, educación, repositorio">
     <meta name="author" content="SENA - Gestión del Conocimiento">
+    
+    <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Gestión del Conocimiento - Repositorio de Soluciones Tecnológicas">
     <meta property="og:description" content="Explora nuestro catálogo de herramientas innovadoras diseñadas para transformar procesos y potenciar resultados.">
     <meta property="og:image" content="{% static 'img/og-image.jpg' %}">
     <meta property="og:url" content="https://innhub.sena.edu.co">
+    
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Gestión del Conocimiento - Repositorio de Soluciones Tecnológicas">
     <meta name="twitter:description" content="Explora nuestro catálogo de herramientas innovadoras del SENA.">
+    
     <title>{% block titulo %}Gestión del Conocimiento - Repositorio de Soluciones Tecnológicas | SENA{% endblock %}</title>
+
+    <!-- Preload critical resources -->
     <link rel="preload" href="{% static 'css/bienvenido.css' %}" as="style">
     <link rel="preload" href="{% static 'img/logo1.png' %}" as="image">
+    
+    <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- CSS personalizado -->
     <link rel="stylesheet" href="{% static 'css/bienvenido.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
 
     {% block css %}{% endblock %}
 </head>
 <body>
 
+    <!-- Skip to main content for accessibility -->
     <a href="#main-content" class="skip-to-main">Saltar al contenido principal</a>
 
+    <!-- ===== HEADER ===== -->
     <header class="header-container" role="banner">
         <div class="header-content">
             <img src="{% static 'img/logo1.png' %}" 
@@ -45,6 +58,7 @@
                     width="75"
                     height="75">
 
+                <!-- Imagen debajo -->
                 <img src="{% static 'img/logo3.png' %}" 
                     alt="Imagen secundaria InnHub"
                     class="header-gc-sublogo">
@@ -63,6 +77,7 @@
                     </svg>
                 </a>
             {% else %}
+                <!-- Dropdown de Login -->
                 <div class="login-dropdown-container">
                     <button class="nav-link login-trigger" id="loginTrigger">
                         <span>Iniciar Sesión</span>
@@ -71,6 +86,7 @@
                         </svg>
                     </button>
                     
+                    <!-- Dropdown Menu -->
                     <div class="login-dropdown" id="loginDropdown">
                         <button class="close-dropdown" aria-label="Cerrar formulario">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -122,6 +138,7 @@
                 </div>
             {% endif %}
         </nav>
+        <!-- Mobile menu button -->
         <button class="mobile-menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
@@ -129,6 +146,7 @@
         </button>
     </header>
 
+    <!-- Mobile Navigation Menu -->
     <nav class="mobile-menu" role="navigation" aria-label="Menú móvil">
         <a href="#main-content" class="mobile-nav-link">Inicio</a>
         <a href="#soluciones" class="mobile-nav-link">Soluciones Tecnológicas</a>
@@ -143,6 +161,7 @@
                 </svg>
             </a>
         {% else %}
+            <!-- Login Dropdown Mobile -->
             <div class="mobile-login-dropdown-container">
                 <button class="mobile-nav-link mobile-login-trigger" id="mobileLoginTrigger">
                     <span>Iniciar Sesión</span>
@@ -150,6 +169,8 @@
                         <path d="M6 9L1 4h10z"/>
                     </svg>
                 </button>
+                
+                <!-- Mobile Dropdown Menu -->
                 <div class="mobile-login-dropdown" id="mobileLoginDropdown">
                     <button class="close-dropdown" id="closeMobileDropdown" aria-label="Cerrar formulario">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -202,6 +223,7 @@
         {% endif %}
     </nav>
 
+    <!-- ===== PARTÍCULAS DE FONDO ===== -->
     <div class="bg-particles" aria-hidden="true">
         <div class="particle"></div>
         <div class="particle"></div>
@@ -213,8 +235,11 @@
         <div class="particle"></div>
     </div>
 
+    <!-- ===== MAIN ===== -->
     <main id="main-content" role="main">
+        <!-- ===== SECCIÓN HERO / BIENVENIDA ===== -->
         <section class="container hero-section">
+            <!-- Texto principal -->
             <div class="main-text">
                 <h1>Repositorio de Soluciones Tecnológicas</h1>
                 <p class="subtitle">
@@ -225,6 +250,7 @@
                     <a href="#soluciones" class="cta-button cta-secondary">Explorar Soluciones</a>
                 </div>
                 
+                <!-- Trust signals -->
                 <div class="trust-signals">
                     <div class="trust-item">
                         <span class="trust-number" data-count="{{ total_soluciones }}">0</span>
@@ -240,19 +266,25 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Hub de conocimiento animado -->
             <div class="knowledge-hub">
                 <div class="hub-container">
+                    <!-- Icono central -->
                     <div class="central-icon">⚛</div>
                     
+                    <!-- Órbitas -->
                     <div class="orbit orbit-1"></div>
                     <div class="orbit orbit-2"></div>
                     <div class="orbit orbit-3"></div>
                     
+                    <!-- Líneas de conexión -->
                     <div class="connection-line line-1"></div>
                     <div class="connection-line line-2"></div>
                     <div class="connection-line line-3"></div>
                     <div class="connection-line line-4"></div>
                     
+                    <!-- Nodos de conocimiento -->
                     <div class="knowledge-node node-1" title="Investigación Científica">🔬</div>
                     <div class="knowledge-node node-2" title="Análisis de Datos">📊</div>
                     <div class="knowledge-node node-3" title="Inteligencia Artificial">🧠</div>
@@ -265,6 +297,7 @@
             </div>
         </section>
 
+        <!-- ===== SECCIÓN SOLUCIONES TECNOLÓGICAS ===== -->
         <section class="secondary-container" id="soluciones">
             <h2 class="section-title">Soluciones Tecnológicas</h2>
             <p class="section-subtitle">
@@ -272,6 +305,7 @@
                 para transformar procesos y potenciar resultados.
             </p>
 
+            <!-- Search and Filter -->
             <div class="search-filter-container">
                 <div class="search-box">
                     <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -291,6 +325,7 @@
                 </div>
             </div>
             <div class="boton-container">
+            <!-- Botón para agregar solución (solo admin) -->
                 {% if request.session.catalogo_admin_id %}
                     <button class="nav-link admin-add-btn" id="adminAddBtn" title="Agregar Solución">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -304,8 +339,9 @@
             </div>
 
             <div class="card-container">
+                <!-- ===== TARJETAS DINÁMICAS DE LA BASE DE DATOS ===== -->
                 {% for solucion in soluciones_paginadas %}
-                <article class="info-card dynamic-card">
+                <article class="info-card dynamic-card" data-category="{{ solucion.categoria }}">
                     <div class="acciones-solucion">
                         {% if request.session.catalogo_admin_id %} 
                             <button type="button"
@@ -324,12 +360,15 @@
                             </button>
                         {% endif %}
                     </div>
+
                     <div class="card-icon">
                         {% if solucion.tipo_icono == 'imagen' and solucion.icono_imagen %}
+                            <!-- Mostrar imagen PNG -->
                             <img src="{{ solucion.icono_imagen.url }}" 
                                  alt="Icono de {{ solucion.titulo }}" 
                                  class="card-icon-img">
                         {% else %}
+                            <!-- Mostrar SVG dinámico basado en icono_nombre -->
                             <svg viewBox="0 0 24 24" style="width: 55%; height: 55%;" fill="currentColor" stroke="none">
                                 {% if solucion.icono_nombre == 'Chat' %}
                                     <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
@@ -400,6 +439,7 @@
                                 {% elif solucion.icono_nombre == 'Candado' %}
                                     <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
                                 {% else %}
+                                    <!-- Icono por defecto: Estrella -->
                                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                                 {% endif %}
                             </svg>
@@ -421,17 +461,22 @@
                 </article>
                 {% endfor %}
             </div>
+
+            <!-- No results message -->
             <div class="no-results" style="display: none;">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                     <path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="2"/>
                 </svg>
                 <p>No se encontraron soluciones que coincidan con tu búsqueda.</p>
             </div>
             
+            <!-- ===== PAGINACIÓN ===== -->
             {% if soluciones_paginadas.has_other_pages %}
             <nav aria-label="Page navigation example" class="mt-4">
                     <ul class="pagination justify-content-center">
+
+                        <!-- Previous -->
                         <li class="page-item {% if not soluciones_paginadas.has_previous %}disabled{% endif %}">
                             <a class="page-link"
                             href="{% if soluciones_paginadas.has_previous %}
@@ -443,6 +488,8 @@
                                 &lt;
                             </a>
                         </li>
+
+                        <!-- Números -->
                         {% for num in soluciones_paginadas.paginator.page_range %}
                             <li class="page-item {% if soluciones_paginadas.number == num %}active{% endif %}">
                                 <a class="page-link"
@@ -451,6 +498,8 @@
                                 </a>
                             </li>
                         {% endfor %}
+
+                        <!-- Next -->
                         <li class="page-item {% if not soluciones_paginadas.has_next %}disabled{% endif %}">
                             <a class="page-link"
                             href="{% if soluciones_paginadas.has_next %}
@@ -470,6 +519,8 @@
 
 
     </main>
+
+<!-- Modal para Agregar Solución (Solo Admin) -->
 {% if request.session.catalogo_admin_id %}
 <div class="admin-modal" id="adminModal">
     <div class="admin-modal-content">
@@ -559,6 +610,7 @@
                 </div>
             </div>
 
+            <!-- Sección de Icono SVG -->
             <div class="form-group" id="iconSection">
                 <label>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -568,12 +620,14 @@
                 </label>
 
                 <div class="input-row">
+                    <!-- live preview -->
                     <div class="icon-preview" id="iconPreview">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".35"/>
                             <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                         </svg>
                     </div>
+                    <!-- ===== AGREGAR name="icono_nombre" ===== -->
                     <input type="text" id="solutionIcon" name="icono_nombre" placeholder="Buscar o escribir icono…" readonly />
                     <button type="button" class="btn-catalog" id="btnOpen" title="Abrir catálogo">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -585,6 +639,7 @@
                     </button>
                 </div>
 
+                <!-- ─── Popup ─── -->
                 <div class="catalog-popup" id="catalogPopup">
                     <div class="catalog-header">
                         <span>Catálogo de Iconos</span>
@@ -596,13 +651,16 @@
                     </div>
 
                     <div class="catalog-tabs" id="catalogTabs">
+                        <!-- filled by JS -->
                     </div>
 
                     <div class="catalog-grid" id="catalogGrid">
+                        <!-- filled by JS -->
                     </div>
                 </div>
             </div>
 
+            <!-- Sección de Imagen PNG -->
             <div class="form-group" id="imageSection" style="display: none;">
                 <label for="solutionImage">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -661,10 +719,15 @@
     <div class="modal-overlay-evento" id="modalEditarSolucion{{ solucion.id }}">
         <div class="modal-dialog-evento">
 
-            <a href="{% url 'bienvenido' %}" class="modal-cerrar-evento">&times;</a>
+            <a href="{% url 'bienvenido' %}" class="modal-cerrar-evento">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </a>
 
             <div class="modal-header-evento">
-                <h5>Editar Solución</h5>
+                <h2>Editar Solución</h2>
             </div>
 
             <div class="modal-body-evento">
@@ -676,20 +739,39 @@
 
                     <div class="row-evento">
 
+                        <!-- TÍTULO -->
                         <div class="col-evento col-evento-full">
-                            <label>Título de la Solución</label>
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                </svg>
+                                Título de la Solución
+                            </label>
                             <input type="text" name="titulo"
                                 value="{{ solucion.titulo }}"
                                 maxlength="200" required>
                         </div>
 
+                        <!-- DESCRIPCIÓN -->
                         <div class="col-evento col-evento-full">
-                            <label>Descripción</label>
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Descripción
+                            </label>
                             <textarea name="descripcion" rows="3" maxlength="250" required>{{ solucion.descripcion }}</textarea>
                         </div>
 
-                        <div class="col-evento">
-                            <label>Categoría</label>
+                        <!-- CATEGORÍA -->
+                        <div class="col-evento col-evento-full">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
+                                </svg>                                
+                                Categoría
+                            </label>
                             <select name="categoria" required>
                                 <option value="">Selecciona una categoría</option>
                                 <option value="innovacion" {% if solucion.categoria == "innovacion" %}selected{% endif %}>Innovación</option>
@@ -698,15 +780,31 @@
                             </select>
                         </div>
 
+                        <!-- URL -->
                         <div class="col-evento col-evento-full">
-                            <label>URL de Acceso</label>
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                </svg>
+                                URL de Acceso
+                            </label>
                             <input type="url" name="url"
                                 value="{{ solucion.url }}"
                                 maxlength="200" required>
                         </div>
 
+                        <!-- TIPO REPRESENTACIÓN -->
                         <div class="col-evento col-evento-full">
-                            <label>Tipo de Representación</label>
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Tipo de Representación
+                            </label>
+
                             <div class="radio-group">
                                 <label class="radio-option">
                                     <input type="radio"
@@ -726,21 +824,85 @@
                             </div>
                         </div>
 
-                        <div class="col-evento col-evento-full editIconSection">
-                            <label>Nombre del Icono</label>
-                            <input type="text"
-                                name="icono_nombre"
-                                id="editSolutionIcon{{ solucion.id }}"
-                                value="{{ solucion.icono_nombre|default:'' }}"
-                                maxlength="100">
+                        <!-- ===== ICONO SVG ===== -->
+                        <div class="col-evento col-evento-full editIconSection"
+                            style="{% if not solucion.icono_nombre %}display:none;{% endif %}">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                                Seleccionar Icono
+                            </label>
+
+                            <div class="input-row">
+                                <!-- live preview -->
+                                <div class="icon-preview" id="iconPreviewEdit{{ solucion.id }}">
+                                    {% if solucion.icono_nombre %}
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                        <!-- El icono actual se mostrará aquí -->
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".35"/>
+                                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                    </svg>
+                                    {% else %}
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".35"/>
+                                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                    </svg>
+                                    {% endif %}
+                                </div>
+                                <input type="text"
+                                    name="icono_nombre"
+                                    id="editSolutionIcon{{ solucion.id }}"
+                                    value="{{ solucion.icono_nombre|default:'' }}"
+                                    placeholder="Buscar o escribir icono…"
+                                    readonly>
+                                <button type="button" class="btn-catalog" id="btnOpenEdit{{ solucion.id }}" title="Abrir catálogo">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                                        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- ─── Popup ─── -->
+                            <div class="catalog-popup" id="catalogPopupEdit{{ solucion.id }}">
+                                <div class="catalog-header">
+                                    <span>Catálogo de Iconos</span>
+                                    <button type="button" class="close-btn" id="btnCloseEdit{{ solucion.id }}">×</button>
+                                </div>
+
+                                <div class="catalog-search">
+                                    <input type="text" id="searchInputEdit{{ solucion.id }}" placeholder="🔍 Buscar icono…" />
+                                </div>
+
+                                <div class="catalog-tabs" id="catalogTabsEdit{{ solucion.id }}">
+                                    <!-- filled by JS -->
+                                </div>
+
+                                <div class="catalog-grid" id="catalogGridEdit{{ solucion.id }}">
+                                    <!-- filled by JS -->
+                                </div>
+                                
+                            </div>
 
                             {% if solucion.icono_nombre %}
                             <small style="color:#666;">Icono actual: {{ solucion.icono_nombre }}</small>
                             {% endif %}
                         </div>
 
-                        <div class="col-evento col-evento-full editImageSection">
-                            <label>Imagen PNG actual</label>
+                        <!-- ===== IMAGEN PNG ===== -->
+                        <div class="col-evento col-evento-full editImageSection"
+                            style="{% if solucion.icono_nombre %}display:none;{% endif %}">
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Imagen PNG actual
+                            </label>
 
                             {% if solucion.icono_imagen %}
                             <div style="margin-bottom:10px;">
@@ -748,7 +910,14 @@
                             </div>
                             {% endif %}
 
-                            <label>Cambiar Imagen</label>
+                            <label>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                Cambiar Imagen
+                            </label>
                             <input type="file"
                                 name="icono_imagen"
                                 id="editSolutionImage{{ solucion.id }}"
@@ -787,6 +956,7 @@
                             class="modal-delete-close"></button>
                 </div>
 
+                <!-- Body -->
                 <div class="modal-delete-body">
                     <p class="mb-2">
                         ¿Estás seguro de que deseas eliminar esta solución?
@@ -796,6 +966,7 @@
                     </strong>
                 </div>
 
+                <!-- Footer -->
                 <div class="modal-delete-footer">
                     <button type="button"
                             class="btn"
@@ -820,12 +991,14 @@
     {% endif %}
 {% endfor %}
 
+    <!-- Scroll to top button -->
     <button class="scroll-to-top" aria-label="Volver arriba" title="Volver arriba">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
     </button>
 
+    <!-- ===== FOOTER ===== -->
     <footer role="contentinfo">
         <div class="footer-content">
             <div class="footer-section">
@@ -852,7 +1025,7 @@
     </footer>
 
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/mensajes.js' %}"></script>
+    <script src="{% static 'js/mensaje.js' %}"></script>
     <script src="{% static 'js/contraseña.js' %}"></script>
     <script src="{% static 'js/admin.js' %}"></script>
     {% if messages %}
