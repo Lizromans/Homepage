@@ -1,6 +1,3 @@
-/* ============================================================
-   1. VARIABLES GLOBALES
-   ============================================================ */
 :root {
     /* Colores */
     --color-primary:            #3db103;
@@ -304,11 +301,11 @@ body {
 
 .mobile-login-dropdown .edit-icon {
     position: absolute;
-    right: 14px;
-    top: 70%;
+    right: 12%;
+    top: 67%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: var(--color-text-light);
+    background-color: var(--color-text-light);
     font-size: 1.1rem;
 }
 
@@ -457,16 +454,15 @@ body {
 /* Icono del ojo */
 .login-form .edit-icon {
     position: absolute;
-    right: 14px;
-    top: 70%;
+    right: 12%;
+    top: 67%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
     font-size: 1.1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color var(--transition-speed) ease;
 }
 
 /* Hover */
@@ -474,9 +470,9 @@ body {
     color: var(--color-primary);
 }
 
-/* Evitar selección o clicks raros */
 .login-form .edit-icon i {
     pointer-events: none;
+    color: var(--color-primary);
 }
 
 /* Botón enviar login */
